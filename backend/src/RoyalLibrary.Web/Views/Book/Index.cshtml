@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "BOOKS";
+}
+@model RoyalLibrary.Web.ViewModels.BookViewModel
+<h2>AVAILABLE</h2>
+
+@*<h3>Name: @Model?.Name</h3>*@
+
+<b>Items:</b>
+
+<ul>
+    @if (Model?.Books != null)
+    {
+        @foreach (var item in Model.Books)
+        {
+            <li>@item.title<br/>@item.category</li>
+        }
+    }
+</ul>
