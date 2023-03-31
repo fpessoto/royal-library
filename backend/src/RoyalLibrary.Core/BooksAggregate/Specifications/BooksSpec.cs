@@ -32,9 +32,13 @@ namespace RoyalLibrary.Core.BooksAggregate.Specifications
 
       if (!string.IsNullOrEmpty(isbn))
         Query.Where(x => x.Isbn == isbn);
-      
-      if(page > 0 && size > 0)
-        Query.Skip((int)page * (int)size).Take((int)size);
+
+      if (page > 0 && size > 0)
+      {
+        var skip = ((int)page - 1) * (int)size;
+        Query.Skip(skip).Take((int)size);
+      }
+
     }
   }
 }

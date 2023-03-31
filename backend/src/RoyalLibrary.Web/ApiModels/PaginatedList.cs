@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+
 namespace RoyalLibrary.Web.ApiModels
 {
   public class PaginatedList<T> 
@@ -11,7 +13,7 @@ namespace RoyalLibrary.Web.ApiModels
 
     public PaginatedList(T source, int pageIndex, int pageSize, int totalCount)
     {
-      PageIndex = pageIndex;
+      PageIndex = (pageIndex - 1) * pageSize;
       PageSize = pageSize;
       TotalCount = totalCount;
       TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);

@@ -29,3 +29,13 @@ export interface IBookType {
     authorFirstName?: string
     authorLastName?: string
   }
+
+  export interface IPageResult<T> {
+    pageIndex: number
+    pageSize: number
+    totalCount: number
+    totalPages: number
+    items: T,
+    hasPreviousPage: boolean
+    hasNextPage: boolean
+  }

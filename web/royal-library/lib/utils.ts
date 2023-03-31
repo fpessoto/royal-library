@@ -1,14 +1,14 @@
 import ms from "ms";
-import { IBook, IBookFilter, IBookType, ICategory } from "types";
+import { IBook, IBookFilter, IBookType, ICategory, IPageResult } from "types";
 import { API_ENDPOINT } from "./constants";
 
-export async function getBookTypes() {
+export async function getBookTypes(): Promise<IBookType[]> {
   const res = await fetch(`${API_ENDPOINT}/BookType`);
   const bookTypes: IBookType[] = await res.json();
   return bookTypes;
 }
 
-export async function getCategories() {
+export async function getCategories(): Promise<ICategory[]> {
   const res = await fetch(`${API_ENDPOINT}/Category`);
   const bookTypes: ICategory[] = await res.json();
   return bookTypes;
@@ -20,15 +20,16 @@ export async function getBooks({
   isbn,
   authorFirstName,
   authorLastName,
-}: IBookFilter) {
-
+}: IBookFilter): Promise<IBook[]> {
   const searchParams = new URLSearchParams();
 
   if (categoryId) searchParams.append("categoryId", `${categoryId}`);
   if (bookTypeId) searchParams.append("bookTypeId", `${bookTypeId}`);
   if (isbn) searchParams.append("isbn", `${isbn}`);
-  if (authorFirstName) searchParams.append("authorFirstName", `${authorFirstName}`);
-  if (authorLastName) searchParams.append("authorLastName", `${authorLastName}`);
+  if (authorFirstName)
+    searchParams.append("authorFirstName", `${authorFirstName}`);
+  if (authorLastName)
+    searchParams.append("authorLastName", `${authorLastName}`);
 
   const res = await fetch(`${API_ENDPOINT}/Book/?${searchParams}`);
 
@@ -36,26 +37,36 @@ export async function getBooks({
   return bookTypes;
 }
 
-export async function getBooksWithPagination({
-  categoryId,
-  bookTypeId,
-  isbn,
-  authorFirstName,
-  authorLastName,
-}: IBookFilter) {
-
-  const searchParams = new URLSearchParams();
+export async function getBooksWithPagination(
+  {
+    categoryId,
+    bookTypeId,
+    isbn,
+    authorFirstName,
+    authorLastName,
+  }: IBookFilter,
+  page: number,
+  size: number,
+): Promise<IPageResult<IBook[]>> {
+  const searchParams = new URLSearchParams([
+    ["page", `${page}`],
+    ["size", `${size}`],
+  ]);
 
   if (categoryId) searchParams.append("categoryId", `${categoryId}`);
   if (bookTypeId) searchParams.append("bookTypeId", `${bookTypeId}`);
   if (isbn) searchParams.append("isbn", `${isbn}`);
-  if (authorFirstName) searchParams.append("authorFirstName", `${authorFirstName}`);
-  if (authorLastName) searchParams.append("authorLastName", `${authorLastName}`);
+  if (authorFirstName)
+    searchParams.append("authorFirstName", `${authorFirstName}`);
+  if (authorLastName)
+    searchParams.append("authorLastName", `${authorLastName}`);
 
-  const res = await fetch(`${API_ENDPOINT}/Book/?${searchParams}`);
+  const res = await fetch(
+    `${API_ENDPOINT}/Book/WithPagination/?${searchParams}`,
+  );
 
-  const bookTypes: IBook[] = await res.json();
-  return bookTypes;
+  const response: IPageResult<IBook[]> = await res.json();
+  return response;
 }
 
 export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {

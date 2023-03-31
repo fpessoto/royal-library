@@ -12,14 +12,12 @@ public class BookController : Controller
 {
   private readonly IRepository<Book> _repository;
 
-  public BookController(IRepository<Book> projectRepository)
+  public BookController(IRepository<Book> repository)
   {
-    _repository = projectRepository;
+    _repository = repository;
   }
 
-  // GET project/{projectId?}
-  [HttpGet("{projectId:int}")]
-  public async Task<IActionResult> Index(int projectId = 1)
+  public async Task<IActionResult> Index()
   {
 
     var books = (await _repository.ListAsync());
