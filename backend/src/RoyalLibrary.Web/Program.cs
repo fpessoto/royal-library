@@ -10,6 +10,7 @@ using FastEndpoints.Swagger.Swashbuckle;
 using FastEndpoints.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Configuration;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -25,7 +26,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
   options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
-string? connectionString = builder.Configuration.GetConnectionString("SqliteConnection");  //Configuration.GetConnectionString("DefaultConnection");
+string? connectionString = builder.Configuration.GetConnectionString("SqliteConnection");
 
 builder.Services.AddCors(options =>
 {
@@ -39,8 +40,6 @@ builder.Services.AddDbContext(connectionString!);
 
 builder.Services.AddControllersWithViews().AddNewtonsoftJson();
 builder.Services.AddRazorPages();
-//builder.Services.AddFastEndpoints();
-//builder.Services.AddFastEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
   c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -48,7 +47,6 @@ builder.Services.AddSwaggerGen(c =>
   c.OperationFilter<FastEndpointsOperationFilter>();
 });
 
-// add list services for diagnostic purposes - see https://github.com/ardalis/AspNetCoreStartupServices
 builder.Services.Configure<ServiceConfig>(config =>
 {
   config.Services = new List<ServiceDescriptor>(builder.Services);
